@@ -1,1 +1,1 @@
-Introduction to machine learning.
+https://openclassrooms.com/fr/courses/4011851-initiez-vous-au-machine-learning/5869331-decouvrez-le-domaine-de-la-data-science
