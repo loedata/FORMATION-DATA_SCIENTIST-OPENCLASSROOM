@@ -1,0 +1,19 @@
+This database is a copy of the offsore leaks database, downloaded under CSV files in may 2017 from this page : https://offshoreleaks.icij.org/pages/database
+
+Here is the disclaimer written the publisher of the offshore leaks database : the ICIJ.
+"There are legitimate uses for offshore companies and trusts. We do not intend to suggest or imply that any persons, companies or other entities included in the ICIJ Offshore Leaks Database have broken the law or otherwise acted improperly. Many people and entities have the same or similar names. We suggest you confirm the identities of any individuals or entities located in the database based on addresses or other identifiable information. If you find an error in the database please get in touch with us."
+
+In order to adapt this database to a relational schema, and to simplify the database for pedagogical reasons, some modifications were made :
+- The original data is composed of 4 CSV files : Entities, all_edges, Addresses, Officers, Intermediaries
+- Each of these CSV files have been extracted into relational tables.
+- To each of these tables, a column named "url" was added. For each object in the database, this column contains a link to the corresponding page in the ICIJ website.
+- Some columns were removed in order to simplifu the database
+- In each table, the lines whose source was not "Panama Papers" were deleted, in order to keep only the panama papers data.
+- In table entity, a column "lifetime" was added. It contains the number of day the entity was active. It is calculated from columns "incorporation_date", "inactivation_date" and "struck_off_date". In the case of any discrepancy between the two last dates, we used the one that happened first, following the methodology of ICIJ : https://panamapapers.icij.org/graphs/methodology/
+- Table all_edges was deduplicated so that the group of columns ["node_1","assoc_type","node_2","source"] is unique. When different values for start_date or end_date were provided, we took the earlier.
+- Table all_edges was separated into several tables, according the type of node_1 and node_2. All these tables have a name beginning with "assoc_".
+- In table assoc_interm_entities, columns start_date and end_date where removed because of data sparsity.
+- Table Addresses was deduplicated, following the information given in table all_edges : "same_address_as". This table was then renamed to "officers_addresses"
+- Some tables were added : status, country, address. Address and country both contain data comming from tables Entity and Intermediary. They were formed by the "normalisation" process (see relational database theory). The table Status was obtained by normalizing table Intermediaries.
+- Some dummy dtaa was added for pedagogical purpose. In each table, a column named "source" is a foreign key to the table "Source". This table contains 2 lines, indicating wether the data comes from the offshore leaks database or is dummy data.
+- In table Officers, the "name" column was reduced to 70 characters. The same process has been done for table addresses with a ceiling of 100 characters.
